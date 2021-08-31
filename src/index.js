@@ -1,9 +1,10 @@
 import './index.css'
 
 import React from 'react'
+import { render } from 'react-dom'
 
-import { gameTypes } from './scripts/settings.js'
-import Game from './scripts/game.js'
+import { gameTypes } from './scripts/settings'
+import Game from './scripts/game'
 import Board from './components/board'
 
 
