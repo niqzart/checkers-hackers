@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import Board from './components/board.js';
+
+const gameTypes = {
+  RANDOM: {
+    height: 8,
+    width: 8,
+    positions: (x, i) => Math.floor(Math.random() * 5 - 2),
+  },
+  RUSSIAN: {
+    height: 8,
+    width: 8,
+    positions: (x, i) => i < 12 ? -1 : i > 19 ? 1 : 0,
+  },
+  INTERNATIONAL: {
+    height: 10,
+    width: 10,
+    positions: (x, i) => i < 20 ? -1 : i > 29 ? 1 : 0,
+  },
+}
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  // return (<Board flip={false} gameType={gameTypes.RUSSIAN} />);
+  return (<Board flip={false} gameType={gameTypes.INTERNATIONAL} />);
 }
 
 export default App;
