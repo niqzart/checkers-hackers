@@ -13,16 +13,15 @@ export default class Game extends React.Component {
     }
   }
 
-  shouldComponentUpdate(_, nextState) {
-    return this.state.positions !== nextState.positions || this.state.fallenSoldiers !== nextState.fallenSoldiers
+  canMovePiece(from, to) {
+    return from !== to
   }
 
-  canMovePiece(from, to) {
-    return true
+  canMovePieceTo(to) {
+    return this.state.currentDrag !== to
   }
 
   movePiece(from, to) {
-    if (from === to) return
     const positions = [...this.state.positions]
     positions[to] = positions[from]
     positions[from] = null
@@ -48,9 +47,17 @@ export default class Game extends React.Component {
   }
 
   render() {
+    console.log("Game was (re-)rendered")
     return (
-      <div style={{backgroundColor: this.state.test % 2 === 0 ? 'green' : 'blue'}}>
-        <Board flip={false} game={this} positions={this.state.positions} over={this.state.currentOver} gametype={this.props.gametype} />
+      <div>
+        <Board
+          flip={false}
+          game={this}
+          gametype={this.props.gametype}
+          positions={this.state.positions}
+          currentOver={this.state.currentOver}
+          currentDrag={this.state.currentOver}
+        />
       </div>
     )
   }
