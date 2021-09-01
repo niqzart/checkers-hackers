@@ -54,7 +54,7 @@ export default class Game extends React.Component {
         <Board
           flip={false}
           game={this}
-          gametype={this.props.gametype}
+          gametype={this.gametype}
           positions={this.state.positions}
           currentOver={this.state.currentOver}
           currentDrag={this.state.currentOver}

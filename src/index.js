@@ -9,7 +9,7 @@ import Game from './components/game'
 
 function App() {
   return (
-    <Game gametype={gameTypes.RANDOM} i={1} />
+    <Game gametype={gameTypes.INTERNATIONAL} i={1} />
   )
 }
 
