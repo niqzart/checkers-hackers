@@ -5,13 +5,17 @@ import whiteKing from "../assets/white-king.svg"
 import React from "react"
 
 export default class Checker extends React.Component {
-  constructor() {
+  constructor(props) {
     super()
+    this.state = {
+      king: props.king
+    }
   }
 
   render() {
     // props: white (bool), king (bool)
-    const { white, king } = this.props
+    const white = this.props.white
+    const king = this.state.king
     return <img src={king ? (white ? whiteKing : blackKing) : (white ? whiteChecker : blackChecker)}
       alt={`A ${white ? "White" : "Black"} ${king ? "King" : "Checker"}`} className={"piece"} />
   }

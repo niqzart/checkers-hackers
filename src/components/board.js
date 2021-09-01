@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 import "./board.css"
 
@@ -8,7 +8,8 @@ function Square({ id, even, over, draged, game, children }) {
     onDragStart={() => game.handleStartDrag(id)}
     onDragEnter={() => game.handleOver(id)}
     onDragEnd={() => game.handleEndDrag(id)}
-    style={{ backgroundColor: over ? (game.canMovePieceTo(id) ? "blue" : "red") : (even ? "#FFCE9E" : "#D18B47") }}>
+    // style={{ backgroundColor: over ? (game.canMovePieceTo(id) ? "blue" : "red") : (even ? "#FFCE9E" : "#D18B47") }}>
+    style={{ backgroundColor: over && game.canMovePieceTo(id) ? "blue" : (even ? "#FFCE9E" : "#D18B47") }}>
     <div style={{ opacity: draged ? 0 : 1 }}>{children}</div>
   </td>
 }
