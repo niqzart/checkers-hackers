@@ -4,6 +4,7 @@ import "./board.css"
 
 function Square({ id, even, over, draged, game, children }) {
   return <td
+    key={id}
     className={"square"}
     onDragStart={() => game.handleStartDrag(id)}
     onDragEnter={() => game.handleOver(id)}
@@ -18,13 +19,14 @@ function Row({ number, game, width, flip, height, positions }) {
   const y = number
   const displayNumber = flip ? y + 1 : height - y
 
-  return <tr>
+  return <tr key={y}>
     <th>{displayNumber}</th>
     {Array(width).fill().map(
       (_, x) => {
         const squareID = y * height + x
 
         return <Square
+          key={squareID}
           even={(y + x) % 2 === 0}
           game={game}
           id={squareID}
@@ -39,34 +41,37 @@ function Row({ number, game, width, flip, height, positions }) {
 }
 
 export default class Board extends React.Component {
+  constructor({ flip, gametype }) {
+    super()
+    const letters = Array(gametype.width + 2).fill().map((_, i) =>
+      i % (gametype.width + 1) === 0 ? null : String.fromCharCode(96 + i))
+    if (flip) { letters.reverse() }
+    this.letterRow = letters.map((letter, i) => <th key={i}>{letter}</th>)
+  }
+
   render() {
-    const { game, gametype, positions, flip } = this.props
+    const { game, gametype, flip, positions } = this.props
 
     const { width, height } = gametype
 
-    const letters = Array(width + 2).fill().map((_, i) =>
-      i % (width + 1) === 0 ? null : String.fromCharCode(96 + i))
-
-    if (flip) { positions.reverse(); letters.reverse() }
-    const letterRow = letters.map((letter, _) => <th>{letter}</th>)
-
     return <table className="no-border">
       <thead>
-        <tr>{letterRow}</tr>
+        <tr>{this.letterRow}</tr>
       </thead>
       <tbody>
         {Array(height).fill().map((_, i) =>
           <Row
+            key={i}
             number={i}
-            flip={flip}
             width={width}
             height={height}
+            flip={flip}
             positions={positions}
             game={game}
           />)}
       </tbody>
       <tfoot>
-        <tr>{letterRow}</tr>
+        <tr>{this.letterRow}</tr>
       </tfoot>
     </table>
   }
