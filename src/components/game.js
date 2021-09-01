@@ -14,8 +14,12 @@ export default class Game extends React.Component {
     }
   }
 
+  canMovePiece(from, to) {
+    return from !== to && this.gametype.isMoveAllowed(from, to)
+  }
+
   canMovePieceTo(to) {
-    return this.state.currentDrag !== to && this.gametype.isSquareAllowed(to)
+    return this.canMovePiece(this.state.currentDrag, to)
   }
 
   movePiece(from, to) {
