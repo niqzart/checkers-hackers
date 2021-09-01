@@ -1,4 +1,4 @@
-import Checker from "../components/pieces"
+import Checker from "../pieces/checkers"
 
 export const gameTypes = {
   RANDOM: {
