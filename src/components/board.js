@@ -6,7 +6,7 @@ function Square({ id, even, over, draged, game, children }) {
   return <td
     className={"square"}
     onDragStart={() => game.handleStartDrag(id)}
-    onDragOverCapture={() => game.handleOver(id)}
+    onDragEnter={() => game.handleOver(id)}
     onDragEnd={() => game.handleEndDrag(id)}
     style={{ backgroundColor: over ? (game.canMovePieceTo(id) ? "blue" : "red") : (even ? "#FFCE9E" : "#D18B47") }}>
     <div style={{ opacity: draged ? 0 : 1 }}>{children}</div>
