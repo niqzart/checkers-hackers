@@ -4,6 +4,7 @@ import Board from "./board"
 export default class Game extends React.Component {
   constructor({ gametype }) {
     super()
+    this.gametype = gametype
     this.state = {
       positions: Array(gametype.width * gametype.height).fill().map(gametype.positions),
       fallenSoldiers: null,
@@ -13,12 +14,8 @@ export default class Game extends React.Component {
     }
   }
 
-  canMovePiece(from, to) {
-    return from !== to
-  }
-
   canMovePieceTo(to) {
-    return this.state.currentDrag !== to
+    return this.state.currentDrag !== to && this.gametype.isSquareAllowed(to)
   }
 
   movePiece(from, to) {
@@ -41,7 +38,7 @@ export default class Game extends React.Component {
     const from = this.state.currentDrag
     const to = this.state.currentOver
 
-    if (this.canMovePiece(from, to)) this.movePiece(from, to)
+    if (this.canMovePieceTo(to)) this.movePiece(from, to)
     this.setState({ currentDrag: null, currentOver: null, test: to })
     console.log(this.state)
   }

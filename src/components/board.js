@@ -39,7 +39,7 @@ function Row({ number, game, width, flip, height, positions }) {
 
 export default class Board extends React.Component {
   render() {
-    const { game, gametype, currentOver, currentDrag, positions, flip } = this.props
+    const { game, gametype, positions, flip } = this.props
 
     const { width, height } = gametype
 
