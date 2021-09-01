@@ -4,7 +4,7 @@ import React from "react"
 import { render } from "react-dom"
 
 import { gameTypes } from "./components/settings"
-import Game from "./components/game"
+import Game from "./games/base"
 
 
 function App() {
