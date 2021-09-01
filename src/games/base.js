@@ -1,65 +1,37 @@
-import React from "react"
-import Board from "../components/board"
-
-export default class Game extends React.Component {
-  constructor({ gametype }) {
-    super()
-    this.gametype = gametype
-    this.state = {
-      positions: Array(gametype.width * gametype.height).fill().map(gametype.positions),
-      fallenSoldiers: null,
-      currentDrag: null,
-      currentOver: null,
-      test: null,
-    }
+export class GameType {
+  constructor(width, height) {
+    this.width = width
+    this.height = height
   }
 
-  canMovePiece(from, to) {
-    return from !== to && this.gametype.isMoveAllowed(from, to)
+  positioning(_, squareID) {
+    return null
   }
 
-  canMovePieceTo(to) {
-    return this.canMovePiece(this.state.currentDrag, to)
+  isMoveAllowed(from, to) {
+    return from !== to
   }
 
-  movePiece(from, to) {
-    const positions = [...this.state.positions]
+  movePiece(from, to, positions, fallen) {
     positions[to] = positions[from]
     positions[from] = null
-    this.setState({ positions: positions })
   }
+}
 
-  handleStartDrag(squareID) {
-    this.setState({ currentDrag: squareID })
-    console.log(this.state)
+export class CheckersBase extends GameType {
+  isMoveAllowed(from, to, positions) {
+    return super.isMoveAllowed(from, to) && positions[to] === null
   }
+}
 
-  handleOver(squareID) {
-    this.setState({ currentOver: squareID })
+export class SixtyFourSquareCheckers extends CheckersBase {
+  constructor() {
+    super(8, 8)
   }
+}
 
-  handleEndDrag() {
-    const from = this.state.currentDrag
-    const to = this.state.currentOver
-
-    if (this.canMovePieceTo(to)) this.movePiece(from, to)
-    this.setState({ currentDrag: null, currentOver: null, test: to })
-    console.log(this.state)
-  }
-
-  render() {
-    console.log("Game was (re-)rendered")
-    return (
-      <div>
-        <Board
-          flip={false}
-          game={this}
-          gametype={this.gametype}
-          positions={this.state.positions}
-          currentOver={this.state.currentOver}
-          currentDrag={this.state.currentOver}
-        />
-      </div>
-    )
+export class HundredSquareCheckers extends CheckersBase {
+  constructor() {
+    super(10, 10)
   }
 }

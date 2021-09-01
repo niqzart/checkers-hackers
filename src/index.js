@@ -3,13 +3,14 @@ import "./index.css"
 import React from "react"
 import { render } from "react-dom"
 
-import { gameTypes } from "./components/settings"
-import Game from "./games/base"
+import Game from "./components/game"
+import { RandomCheckers } from "./games/test"
+import { RussianCheckers, InternationalCheckers } from "./games/checkers"
 
 
 function App() {
   return (
-    <Game gametype={gameTypes.INTERNATIONAL} />
+    <Game gametype={new InternationalCheckers()} flip={true} />
   )
 }
 
