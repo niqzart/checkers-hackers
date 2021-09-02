@@ -5,7 +5,7 @@ export default class Game extends React.Component {
   constructor({ gametype, flip }) {
     super()
     const positions = Array(gametype.width * gametype.height).fill().map(gametype.positioning)
-    if (flip) positions.reverse(); 
+    if (flip) positions.reverse();
 
     this.gametype = gametype
     this.state = {
@@ -41,6 +41,12 @@ export default class Game extends React.Component {
 
     if (this.canMovePieceTo(to)) this.movePiece(from, to)
     this.setState({ currentDrag: null, currentOver: null })
+  }
+
+  handleDoubleClick(squareID) {
+    const positions = [...this.state.positions]
+    positions[squareID].king = !positions[squareID].king
+    this.setState({ positions })
   }
 
   render() {
