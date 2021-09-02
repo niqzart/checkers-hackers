@@ -12,7 +12,7 @@ export class GameType {
     return from !== to
   }
 
-  movePiece(from, to, positions, fallen) {
+  movePiece(from, to, positions, fallen) {  // retruns if you should end the turn
     positions[to] = positions[from]
     positions[from] = null
   }

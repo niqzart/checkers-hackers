@@ -9,15 +9,19 @@ export default class Checker extends BasePiece {
   constructor(props) {
     super()
     this.state = {
-      king: props.king
+      king: props.king,
+      // draggable: props.white,
     }
   }
 
   render() {
-    // props: white (bool), king (bool)
+    const king = this.props.king
     const white = this.props.white
-    const king = this.state.king
-    return <img src={king ? (white ? whiteKing : blackKing) : (white ? whiteChecker : blackChecker)}
-      alt={`A ${white ? "White" : "Black"} ${king ? "King" : "Checker"}`} className={"piece"} />
+    return <img
+      src={king ? (white ? whiteKing : blackKing) : (white ? whiteChecker : blackChecker)}
+      alt={`A ${white ? "White" : "Black"} ${king ? "King" : "Checker"}`}
+      // draggable={this.state.draggable}
+      className={"piece"}
+    />
   }
 }
