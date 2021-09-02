@@ -1,6 +1,6 @@
 import React from "react"
 import { useHistory } from "react-router-dom"
-import { Button, TextField, FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
+import { Box, Button, Grid, TextField, FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
 
 import { RandomCheckers } from "../games/test"
 import { RussianCheckers, InternationalCheckers } from "../games/checkers"
@@ -45,20 +45,27 @@ export default class HomePage extends React.Component {
   }
 
   renderTextField(gamename, field, label) {
-    return <TextField
+    return <Box marginTop="1px"><TextField
       id={gamename + "-game-" + field}
       label={label}
-      style={{ margin: "10 0" }}
       onChange={(event) => this.handleChange(gamename, field, event.target.value)}
-    />
+    /></Box>
+  }
+
+  renderButton(gamename) {
+    return <Box m="auto" marginTop="1rem"><Button
+      onClick={this["validate" + gamename + "Game"]}
+      variant="contained"
+      color="primary"
+    >{gamename} Game</Button></Box>
   }
 
   render() {
-    return <table><tbody><tr>
+    return <table style={{ margin: "auto" }}><tbody><tr>
       <FormWrapper>
         {this.renderTextField("new", "username", "Your Username")}
         {this.renderTextField("new", "code", "Code (optional)")}
-        <FormControl>
+        <FormControl m="1rem">
           <InputLabel id="new-game-type-lable">Game Type</InputLabel>
           <Select
             id="new-game-type"
@@ -81,13 +88,13 @@ export default class HomePage extends React.Component {
             <MenuItem value={false}>Black</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={this.validateNewGame} variant="contained" color="primary" >New Game</Button>
+        {this.renderButton("New")}
       </FormWrapper>
       <FormWrapper>
         {this.renderTextField("join", "gameID", "Lobby ID")}
         {this.renderTextField("join", "username", "Your Username")}
         {this.renderTextField("join", "code", "Code (optional)")}
-        <Button onClick={this.validateJoinGame} variant="contained" color="primary" >Join Game</Button>
+        {this.renderButton("Join")}
       </FormWrapper>
     </tr></tbody></table>
   }
