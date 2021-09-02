@@ -40,7 +40,7 @@ app.get("/games/:id/turn/", ({ params, body }, response) => {
 
 app.post("/games/:id/turn/", ({ params, body }, response) => {
   startedGames[params.id].makeAMove(body)
-  response.json = {message: "Success"}
+  response.json = { message: "Success" }
 })
 
 
