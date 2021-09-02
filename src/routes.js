@@ -1,5 +1,7 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
+import { ThemeProvider, createTheme } from "@material-ui/core/styles"
+import { CssBaseline, useMediaQuery } from '@material-ui/core'
 
 import Game from "./components/game"
 
@@ -30,5 +32,12 @@ function Main() {
 
 
 export default function App() {
-  return <div><Main /></div>
+  return (
+    <ThemeProvider
+      theme={createTheme({ palette: { type: useMediaQuery('(prefers-color-scheme: dark)') ? "dark" : "light", } })}
+    >
+      <CssBaseline />
+      <Main />
+    </ThemeProvider>
+  )
 }
