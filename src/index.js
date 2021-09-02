@@ -1,17 +1,8 @@
 import "./index.css"
 
-import React from "react"
 import { render } from "react-dom"
+import { BrowserRouter } from 'react-router-dom'
 
-import Game from "./components/game"
-import { RandomCheckers } from "./games/test"
-import { RussianCheckers, InternationalCheckers } from "./games/checkers"
+import App from "./routes"
 
-
-function App() {
-  return (
-    <Game gametype={new InternationalCheckers()} flip={true} />
-  )
-}
-
-render(<App />, document.getElementById("root"))
+render(<BrowserRouter><App /></BrowserRouter>, document.getElementById("root"))
