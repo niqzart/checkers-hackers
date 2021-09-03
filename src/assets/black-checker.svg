@@ -1,10 +1,10 @@
 <svg 
-    width="64px" 
-    height="64px" 
-    viewBox="-32 -32 64 64" 
+    width="52px" 
+    height="52px" 
+    viewBox="-26 -26 52 52" 
     xmlns="http://www.w3.org/2000/svg" 
     xmlns:xlink="http://www.w3.org/1999/xlink">
         <title>Black Checker</title>
-        <circle cx="0" cy="0" r="32" stroke="none" fill="#333" />
-        <circle cx="0" cy="0" r="28" stroke="none" fill="#000" />
+        <circle cx="0" cy="0" r="26" stroke="none" fill="#333" />
+        <circle cx="0" cy="0" r="22" stroke="none" fill="#000" />
 </svg>
