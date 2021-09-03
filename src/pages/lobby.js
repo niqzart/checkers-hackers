@@ -1,10 +1,9 @@
 import React from "react"
-import { CopyToClipboard } from "react-copy-to-clipboard"
+import { Redirect } from "react-router"
 
 import { Grid, CircularProgress, IconButton } from "@material-ui/core"
-import VisibilityIcon from '@material-ui/icons/Visibility'
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-import { Redirect } from "react-router"
+import VisibilityIcon from "@material-ui/icons/Visibility"
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
 
 
 export default class LobbyPage extends React.Component {

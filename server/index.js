@@ -1,5 +1,5 @@
 import { OpenGame, StartedGame } from "./lobbies.js"
-import express from 'express'
+import express from "express"
 
 const app = express()
 

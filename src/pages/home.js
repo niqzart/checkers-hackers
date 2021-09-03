@@ -1,8 +1,6 @@
 import React from "react"
-import { Box, Button, Grid, TextField, FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
+import { Box, Button, TextField, FormControl, Select, MenuItem, InputLabel } from "@material-ui/core"
 
-import { RandomCheckers } from "../games/test"
-import { RussianCheckers, InternationalCheckers } from "../games/checkers"
 import { Redirect } from "react-router"
 
 
@@ -55,7 +53,7 @@ export default class HomePage extends React.Component {
   validateNewGame() {
     // then submit
     if (this.state.newGame.username === null) this.setState({ errors: { ...this.state.errors, newGameUsername: true } })
-    else this.setState({ redirect: { pathname: "/lobby/", state: this.state.newGame } })
+    else this.setState({ redirect: { pathname: "/lobby/", state: {gameID: 23, ...this.state.newGame} } })
   }
 
   validateJoinGame() {
@@ -82,7 +80,7 @@ export default class HomePage extends React.Component {
   }
 
   renderButton(gamename) {
-    return <Box m="auto" marginTop="4px"><Button
+    return <Box m="auto" marginTop="6px"><Button
       onClick={() => this["validate" + gamename + "Game"]()}
       variant="contained"
       color="primary"
