@@ -1,17 +1,23 @@
 import React from "react"
 import { Grid } from "@material-ui/core"
 
-import Board from "./board"
-import Grave from "./grave"
+import Board from "../components/board"
+import Grave from "../components/grave"
+import { Redirect } from "react-router"
 
 
-export default class Game extends React.Component {
-  constructor({ gametype, flip }) {
+export default class GamePage extends React.Component {
+  constructor({ location }) {
     super()
-    const positions = Array(gametype.width * gametype.height).fill().map(gametype.positioning)
-    if (flip) positions.reverse();
 
-    this.gametype = gametype
+    // decide props.location.status to gametype, flip & starting positions
+    this.flip = location.state.flip
+    this.gametype = location.state.gametype
+    if (this.gametype === undefined) return
+
+    const positions = Array(this.gametype.width * this.gametype.height).fill().map(this.gametype.positioning)
+    if (this.flip) positions.reverse();
+
     this.state = {
       positions: positions,
       fallen: [],
@@ -70,7 +76,8 @@ export default class Game extends React.Component {
   }
 
   render() {
-    console.log("Game was (re-)rendered")
+    if (this.gametype === undefined) return <Redirect to="/" push />
+
     return (
       <Grid container
         spacing={0}

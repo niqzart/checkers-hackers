@@ -3,17 +3,11 @@ import { Switch, Route, Redirect } from "react-router-dom"
 import { ThemeProvider, createTheme } from "@material-ui/core/styles"
 import { CssBaseline, useMediaQuery } from "@material-ui/core"
 
-import Game from "./components/game"
+import GamePage from "./pages/game"
 
 import HomePage from "./pages/home"
 import LobbyPage from "./pages/lobby"
-import { RandomCheckers } from "./games/test"
-import { RussianCheckers, InternationalCheckers } from "./games/checkers"
 
-
-function GamePage() {
-  return <Game gametype={new InternationalCheckers()} flip={true} />
-}
 
 function JoinPage(props) {
   return <div>Joining {props.match.params.id}...</div>
