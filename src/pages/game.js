@@ -1,9 +1,9 @@
 import React from "react"
+import { Redirect } from "react-router"
 import { Grid } from "@material-ui/core"
 
 import Board from "../components/board"
 import Grave from "../components/grave"
-import { Redirect } from "react-router"
 
 
 export default class GamePage extends React.Component {

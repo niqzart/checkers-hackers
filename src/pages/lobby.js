@@ -1,6 +1,5 @@
 import React from "react"
 import { Redirect } from "react-router"
-
 import { Grid, CircularProgress, IconButton } from "@material-ui/core"
 import VisibilityIcon from "@material-ui/icons/Visibility"
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"

@@ -1,6 +1,7 @@
+import "./board.css"
+
 import React from "react"
 
-import "./board.css"
 import Square from "./square"
 
 function Row({ number, game, width, flip, height, positions }) {
