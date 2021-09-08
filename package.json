@@ -18,7 +18,8 @@
     "react-router": "^5.2.1",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "ws": "^8.2.1"
   },
   "scripts": {
     "server": "node server/index.js",

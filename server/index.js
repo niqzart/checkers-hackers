@@ -1,48 +1,82 @@
+// Lobbies HTTP:
+// POST /lobbies/ -> create a lobby, init a websocket room, return ID & room-code           DONE
+// POST /lobbies/id/join/ -> check if exists, check code & return room-code                 DONE
+// **** /lobbies/id/ws/ -> check the code & connect to websocket room                       DONE
+
+// WebSocket:
+// server: onConnect() -> add user to the lobby & check if game can be / has been started   DONE
+// client: onMessage("start") -> game has been started                                      
+// server: onMessage("turn") -> send to all other clients                                   DONE
+
+// For client:
+// Keep the websocket from LobbyPage to GamePage (location.state)
+
+// RPC vs REST
+
 import express from "express"
+import Server from "ws"
 
-import { OpenGame, StartedGame } from "./lobbies.js"
-
+const wss = new Server({ noServer: true })
 const app = express()
 
+var nextID = 0
+const lobbies = {}
+const websocketRooms = {}
 
-const openGames = {}
-const startedGames = {}
 
-
-app.post("/games/", ({ body }, response) => {
-  const game = OpenGame(body)
-  openGames[game.id] = game
-  response.json({ id: game.id });
+app.post("/lobbies/", ({ body }, response) => {
+  response.json = { "id": nextID }
+  lobbies[nextID] = { ...body, stated: false }
+  websocketRooms[++nextID] = []
 })
 
-app.get("/games/", (_, response) => {
-  response.json(Object.values(openGames))
-})
-
-
-app.post("/games/:id/join/", ({ params, body }, response) => {
-  if (!params.id in openGames) {
+app.post("/lobbies/:id/join/", ({ params, body }, response) => {
+  const lobbyID = params.id
+  if (!(lobbyID in Object.keys(lobbies))) {
     response.status = 404
-    response.json = { message: "Game doesn't exist" }
-  } else if (openGames[params.id].code !== body.code) {
-    response.status = 403
+    response.json = { message: "Lobby doesn't exist" }
+  } else if (lobbies[params.id].code != body.code) {
     response.json = { message: "Wrong code" }
   } else {
-    startedGames[params.id] = StartedGame(openGames[params.id].firstPlayer, body.player)
-    delete openGames[params.id]
-    response.json = { message: "Success" }
+    response.json = lobbies[lobbyID]
+  }
+})
+
+app.get("/lobbies/:id/ws/", (request, response) => {
+  if (request.headers.upgrade
+    && request.headers.upgrade.toLowerCase() == "websocket"
+    && request.headers.connection.match(/\bupgrade\b/i)) {
+    if (canJoinLobby(request.params.id, request.body.code))
+      wss.handleUpgrade(request, request.socket, Buffer.alloc(0), (ws) => connect(ws, request.params.id))
+    else {
+      wss.handleUpgrade(request, request.socket, Buffer.alloc(0), reject)
+    }
+  }
+  else {
+    response.status = 400
+    response.json = { message: "Invalid headers" }
   }
 })
 
 
-app.get("/games/:id/turn/", ({ params, body }, response) => {
-  response.json = { turn: startedGames[params.id].getLastTurn(body.player) }
-})
+function canJoinLobby(lobbyID, code) {
+  return lobbyID in Object.keys(websocketRooms) && code == lobbies[lobbyID].code
+}
 
-app.post("/games/:id/turn/", ({ params, body }, response) => {
-  startedGames[params.id].makeAMove(body)
-  response.json = { message: "Success" }
-})
+
+function reject(webSocket) {
+  webSocket.disconnect()
+}
+
+function connect(webSocket, lobbyID) {
+  websocketRooms[lobbyID].push(webSocket)
+
+  webSocket.on("turn", (message) => {
+    for (let client of websocketRooms[lobbyID]) client.send(message)
+  })
+
+  webSocket.on("close", () => websocketRooms[lobbyID].delete(webSocket))
+}
 
 
 const PORT = process.env.PORT || 4000
