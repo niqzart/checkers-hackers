@@ -10,7 +10,8 @@ export default class GamePage extends React.Component {
   constructor({ location }) {
     super()
 
-    // decide props.location.status to gametype, flip & starting positions
+    this.ws = location.state.ws
+    
     this.flip = location.state.flip
     this.gametype = location.state.gametype
     if (this.gametype === undefined) return

@@ -88,7 +88,6 @@ export default class HomePage extends React.Component {
 
   render() {
     if (this.state.redirect !== null) {
-      console.log(this.state.redirect)
       return <Redirect to={this.state.redirect} push />
     }
 
@@ -98,7 +97,7 @@ export default class HomePage extends React.Component {
         {this.renderTextField("new", "code", "Code (optional)")}
         <Box marginTop="4px" marginBottom="4px">
           <FormControl style={{ width: "100%" }}>
-            <InputLabel id="new-game-type-lable">Game Type</InputLabel>
+            <InputLabel id="new-game-type-label">Game Type</InputLabel>
             <Select
               id="new-game-type"
               variant="outlined"
@@ -113,7 +112,7 @@ export default class HomePage extends React.Component {
         </Box>
         <Box marginTop="4px" marginBottom="4px">
           <FormControl style={{ width: "100%" }}>
-            <InputLabel id="new-game-side-lable">Your Side</InputLabel>
+            <InputLabel id="new-game-side-label">Your Side</InputLabel>
             <Select
               id="new-game-side"
               variant="outlined"

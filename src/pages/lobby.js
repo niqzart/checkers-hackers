@@ -8,6 +8,9 @@ import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
 export default class LobbyPage extends React.Component {
   constructor() {
     super()
+
+    this.ws = location.state.ws
+
     this.state = {
       codeShown: false,
       gameStarted: false,
