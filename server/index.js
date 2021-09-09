@@ -26,8 +26,17 @@ const websocketRooms = {}
 
 app.post("/lobbies/", ({ body }, response) => {
   response.json = { "id": nextID }
-  lobbies[nextID] = { ...body, stated: false }
-  websocketRooms[++nextID] = []
+  websocketRooms[nextID] = {}
+
+  const users = {}
+  users[body.username] = body.side
+
+  lobbies[++nextID] = {
+    gametype: body.gametype,
+    code: body.code,
+    stated: false,
+    users: users,
+  }
 })
 
 app.post("/lobbies/:id/join/", ({ params, body }, response) => {
@@ -38,17 +47,25 @@ app.post("/lobbies/:id/join/", ({ params, body }, response) => {
   } else if (lobbies[params.id].code != body.code) {
     response.json = { message: "Wrong code" }
   } else {
+    joinLobby(lobbyID, request.body.username)
     response.json = lobbies[lobbyID]
   }
 })
 
 app.get("/lobbies/:id/ws/", (request, response) => {
+  const lobbyID = request.params.id
+  const { username, code } = request.body
   if (request.headers.upgrade
     && request.headers.upgrade.toLowerCase() == "websocket"
     && request.headers.connection.match(/\bupgrade\b/i)) {
-    if (canJoinLobby(request.params.id, request.body.code))
+    if (canJoinLobby(lobbyID, username, code)) {
+      sendToLobby(lobbyID, {
+        type: "join",
+        username: username,
+        side: lobbies[lobbyID].users[username]
+      })
       wss.handleUpgrade(request, request.socket, Buffer.alloc(0), (ws) => connect(ws, request.params.id))
-    else {
+    } else {
       wss.handleUpgrade(request, request.socket, Buffer.alloc(0), reject)
     }
   }
@@ -59,8 +76,16 @@ app.get("/lobbies/:id/ws/", (request, response) => {
 })
 
 
-function canJoinLobby(lobbyID, code) {
-  return lobbyID in Object.keys(websocketRooms) && code == lobbies[lobbyID].code
+function joinLobby(lobbyID, username) {
+  lobbies[lobbyID].users[username] =
+    "white" in Object.values(lobbies[lobbyID].users) ? "black" : "white"
+}
+
+function canJoinLobby(lobbyID, username, code) {
+  return lobbyID in Object.keys(websocketRooms)
+    && code == lobbies[lobbyID].code
+    && username in Object.keys(lobbies[lobbyID].users)
+    && websocketRooms[lobbyID].length < 2
 }
 
 
@@ -68,12 +93,25 @@ function reject(webSocket) {
   webSocket.disconnect()
 }
 
+function sendJSON(client, data) {
+  client.send(JSON.stringify(data))
+}
+
+function sendToLobby(lobbyID, data) {
+  for (let client of websocketRooms[lobbyID]) sendJSON(client, data)
+}
+
 function connect(webSocket, lobbyID) {
   websocketRooms[lobbyID].push(webSocket)
 
-  webSocket.on("turn", (message) => {
-    for (let client of websocketRooms[lobbyID]) client.send(message)
-  })
+  if (!lobbies[lobbyID].started && websocketRooms[lobbyID].length >= 2) {  // replace with max players
+    lobbies[lobbyID].started = true
+    sendToLobby(lobbyID, { type: "start" })
+  } else if (lobbies[lobbyID].started) {
+    sendJSON(webSocket, { type: "start" })
+  }
+
+  webSocket.on("message", (data) => sendToLobby(lobbyID, { type: "sync", data: data }))
 
   webSocket.on("close", () => websocketRooms[lobbyID].delete(webSocket))
 }
