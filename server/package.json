@@ -1,0 +1,26 @@
+{
+  "name": "checkers-hackers",
+  "version": "0.1.0",
+  "description": "This example is so cool.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "web-vitals": "^1.1.2",
+    "ws": "^8.2.1"
+  },
+  "type": "module",
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "engines": {
+    "node": "16.x"
+  },
+  "author": "jane-doe",
+  "license": "MIT"
+}

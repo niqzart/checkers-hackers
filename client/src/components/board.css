@@ -1,0 +1,17 @@
+.no-border {
+  border-collapse: collapse;
+}
+
+.square {
+  width: 72px;
+  height: 72px;
+  text-align: center;
+}
+
+.light {
+  background-color: #FFCE9E;
+}
+
+.dark {
+  background-color: #D18B47;
+}
