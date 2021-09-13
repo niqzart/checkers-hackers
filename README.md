@@ -1,5 +1,5 @@
 # Checkers Hackers
-My first React.js + Node.js project. It's a multiplayer game of checkers with [some expandability options](#Expandability). You can either [run it yourself](#How-to-run-(LAN)) or visit the [hosted version](#Hosted-version).
+My first React.js + Node.js project. It's a multiplayer game of checkers with [some expandability options](#Expandability). You can either [run it yourself](#How-to-run-LAN) or visit the [hosted version](#Hosted-version).
 
 Wondering there is the git history? It's gone due to data loss. I saved the source code though, so it's fine, I guess.
 
