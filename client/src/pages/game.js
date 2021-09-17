@@ -28,7 +28,19 @@ export default class Game extends React.Component {
       fallen: Array(this.gametype.pieces.length).fill(0),
       currentDrag: null,
       currentOver: null,
+      moveLog: [],
     }
+  }
+
+  logMove(move) {
+    const moveLog = [...this.state.moveLog]
+    moveLog.push(move)
+    this.setState({ moveLog })
+  }
+
+  sendMove(move) {
+    this.ws.send(JSON.stringify(move))
+    this.logMove(move)
   }
 
   crown(squareID, animate = false) {
@@ -75,29 +87,29 @@ export default class Game extends React.Component {
 
     if (to < 0 && from >= 0) {
       this.kill(from)
-      this.ws.send(JSON.stringify({
+      this.sendMove({
         type: "sync",
         action: "kill",
         target: from
-      }))
+      })
     } else if (this.canMovePieceTo(to)) {
       this.movePiece(from, to)
-      this.ws.send(JSON.stringify({
+      this.sendMove({
         type: "sync",
         action: "move",
         from, to
-      }))
+      })
     }
     this.setState({ currentDrag: null, currentOver: null })
   }
 
   handleDoubleClick(squareID) {
     this.crown(squareID)
-    this.ws.send(JSON.stringify({
+    this.sendMove({
       type: "sync",
       action: "crown",
       target: squareID,
-    }))
+    })
   }
 
   convertCoordinate(coord) { // make an absolute coord system instead
@@ -113,6 +125,7 @@ export default class Game extends React.Component {
     else if (json.action === "kill") this.kill(this.convertCoordinate(json.target), true)
     else if (json.action === "crown") this.crown(this.convertCoordinate(json.target), true)
     else console.warn(`Unknown action type ${json.action}`)
+    this.logMove(json)
   }
 
   render() {
@@ -146,6 +159,9 @@ export default class Game extends React.Component {
             fallen={this.state.fallen}
           />
         </Grid>
+        {this.state.moveLog.map((move) => <Grid item xs={12}>
+          {move.action}
+        </Grid>)}
       </Grid>
     )
   }
