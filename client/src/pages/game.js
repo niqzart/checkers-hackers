@@ -1,9 +1,14 @@
 import React from "react"
 import { Redirect } from "react-router"
-import { Grid } from "@material-ui/core"
+import { Badge, Button, Drawer, Grid } from "@material-ui/core"
 
 import Board from "../components/board"
 import Grave from "../components/grave"
+
+
+function representMove({ action, from, to, target }) {
+
+}
 
 
 export default class Game extends React.Component {
@@ -29,6 +34,8 @@ export default class Game extends React.Component {
       currentDrag: null,
       currentOver: null,
       moveLog: [],
+      logOpen: false,
+      unreadMoves: 0,
     }
   }
 
@@ -86,7 +93,6 @@ export default class Game extends React.Component {
     const to = this.state.currentOver
 
     if (to < 0 && from >= 0) {
-      this.kill(from)
       this.sendMove({
         type: "sync",
         action: "kill",
@@ -135,34 +141,71 @@ export default class Game extends React.Component {
     }
 
     return (
-      <Grid container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "100vh", width: "100%" }}
-      >
-        <Grid item xs={12}>
-          <Board
-            game={this}
-            flip={this.flip}
-            gametype={this.gametype}
-            positions={this.state.positions}
-            currentOver={this.state.currentOver}
-            currentDrag={this.state.currentOver}
-          />
+      <div>
+        <Grid container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          style={{ minHeight: "100vh", width: "100%" }}
+        >
+          <Grid item xs={12}>
+            <Board
+              game={this}
+              flip={this.flip}
+              gametype={this.gametype}
+              positions={this.state.positions}
+              currentOver={this.state.currentOver}
+              currentDrag={this.state.currentOver}
+            />
+          </Grid>
+          <Grid item xs={12} style={{ width: "500px" }}>
+            <Grid container
+              spacing={0}
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Grid item xs={8}>
+                <Grave
+                  game={this}
+                  gametype={this.gametype}
+                  fallen={this.state.fallen}
+                />
+              </Grid>
+              <Grid item xs={4} align="center">
+                <Badge badgeContent={this.state.unreadMoves} color={"secondary"}>
+                  <Button
+                    onClick={() => this.setState({ logOpen: true, unreadMoves: 0 })}
+                    variant="contained"
+                    color={"primary"}
+                  >
+                    Open Logs
+                  </Button>
+                </Badge>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grave
-            game={this}
-            gametype={this.gametype}
-            fallen={this.state.fallen}
-          />
-        </Grid>
-        {this.state.moveLog.map((move) => <Grid item xs={12}>
-          {move.action}
-        </Grid>)}
-      </Grid>
+        <Drawer anchor={"bottom"} open={this.state.logOpen} onClose={() => this.setState({ logOpen: false })} >
+          <Grid container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ width: "100%" }}
+            onDoubleClick={() => {
+              this.setState({ logOpen: false })
+              this.revertLastMove()
+              this.sendMove({ action: "revert" }, true)
+            }}
+          >
+            {this.state.moveLog.map((move, i) => (
+              <Grid item xs={12}>
+                {move.action}
+              </Grid>))}
+          </Grid>
+        </Drawer>
+      </div>
     )
   }
 

@@ -20,7 +20,7 @@ export default class Grave extends React.Component {
       onDragEnter={() => game.handleOver(-1)}
       style={{
         margin: "auto",
-        marginTop: "10px",
+        marginTop: "6px",
         width: "100%",
         background: this.state.dragOver ? "blue" : null,
       }}
