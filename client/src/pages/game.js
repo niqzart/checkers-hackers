@@ -39,15 +39,15 @@ export default class Game extends React.Component {
     }
   }
 
-  logMove(move) {
+  logMove(move, mine = false) {
     const moveLog = [...this.state.moveLog]
-    moveLog.push(move)
-    this.setState({ moveLog })
+    moveLog.unshift({ ...move, mine })
+    this.setState({ moveLog, unreadMoves: mine ? 0 : this.state.unreadMoves + 1 })
   }
 
-  sendMove(move) {
-    this.ws.send(JSON.stringify(move))
-    this.logMove(move)
+  sendMove(move, revert = false) {
+    this.ws.send(JSON.stringify({ ...move, type: "sync", revert }))
+    if (!revert) this.logMove(move, true)
   }
 
   crown(squareID, animate = false) {
@@ -61,11 +61,14 @@ export default class Game extends React.Component {
     const fallen = [...this.state.fallen]
 
     // redo index getting with an abstraction!
-    fallen[this.gametype.pieces.findIndex(x =>
-      x.white === positions[squareID].white && x.king === positions[squareID].king)] += 1
+    const index = this.gametype.pieces.findIndex(x =>
+      x.white === positions[squareID].white && x.king === positions[squareID].king)
+    fallen[index] += 1
     positions[squareID] = null
 
     this.setState({ positions, fallen })
+
+    return index  // kostil
   }
 
   movePiece(from, to, animate = false) {
@@ -96,7 +99,8 @@ export default class Game extends React.Component {
       this.sendMove({
         type: "sync",
         action: "kill",
-        target: from
+        target: from,
+        grave: this.kill(from),
       })
     } else if (this.canMovePieceTo(to)) {
       this.movePiece(from, to)
@@ -122,15 +126,34 @@ export default class Game extends React.Component {
     return coord < 0 ? coord : this.gametype.width * this.gametype.height - coord - 1
   }
 
+  revertLastMove() {
+    const move = {...this.state.moveLog[0]}
+
+    const moveLog = [...this.state.moveLog]
+    moveLog.shift()
+    this.setState({ moveLog })
+
+    if (move.action === "move") this.movePiece(move.to, move.from)
+    else if (move.action === "kill") this.movePiece(-move.grave - 1, move.target)
+    else if (move.action === "crown") this.crown(move.target)
+  }
+
   reproduceMove(json) {
-    if (json.action === "move") this.movePiece(
-      this.convertCoordinate(json.from),
-      this.convertCoordinate(json.to),
-      true
-    )
-    else if (json.action === "kill") this.kill(this.convertCoordinate(json.target), true)
-    else if (json.action === "crown") this.crown(this.convertCoordinate(json.target), true)
-    else console.warn(`Unknown action type ${json.action}`)
+    console.log("b")
+    if (json.action === "move") {
+      json.from = this.convertCoordinate(json.from)
+      json.to = this.convertCoordinate(json.to)
+      this.movePiece(json.from, json.to, true)
+    } else if (json.action === "kill") {
+      json.target = this.convertCoordinate(json.target)
+      this.kill(json.target, true)
+    } else if (json.action === "crown") {
+      json.target = this.convertCoordinate(json.target)
+      this.crown(json.target, true)
+    } else if (json.action === "revert") {
+      this.revertLastMove()
+      return
+    } else console.warn(`Unknown action type ${json.action}`)
     this.logMove(json)
   }
 
@@ -201,7 +224,7 @@ export default class Game extends React.Component {
           >
             {this.state.moveLog.map((move, i) => (
               <Grid item xs={12}>
-                {move.action}
+                {`${move.revert ? "reverted " : ""}${move.action} ${move.mine === this.flip ? "black" : "white"}`}
               </Grid>))}
           </Grid>
         </Drawer>
