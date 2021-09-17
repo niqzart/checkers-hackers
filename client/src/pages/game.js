@@ -31,13 +31,13 @@ export default class Game extends React.Component {
     }
   }
 
-  crown(squareID) {
+  crown(squareID, animate = false) {
     const positions = [...this.state.positions]
     positions[squareID].king = !positions[squareID].king
     this.setState({ positions })
   }
 
-  kill(squareID) {
+  kill(squareID, animate = false) {
     const positions = [...this.state.positions]
     const fallen = [...this.state.fallen]
 
@@ -49,7 +49,7 @@ export default class Game extends React.Component {
     this.setState({ positions, fallen })
   }
 
-  movePiece(from, to) {
+  movePiece(from, to, animate = false) {
     const positions = [...this.state.positions]
     const fallen = [...this.state.fallen]
 
@@ -105,9 +105,13 @@ export default class Game extends React.Component {
   }
 
   reproduceMove(json) {
-    if (json.action === "move") this.movePiece(this.convertCoordinate(json.from), this.convertCoordinate(json.to))
-    else if (json.action === "kill") this.kill(this.convertCoordinate(json.target))
-    else if (json.action === "crown") this.crown(this.convertCoordinate(json.target))
+    if (json.action === "move") this.movePiece(
+      this.convertCoordinate(json.from),
+      this.convertCoordinate(json.to),
+      true
+    )
+    else if (json.action === "kill") this.kill(this.convertCoordinate(json.target), true)
+    else if (json.action === "crown") this.crown(this.convertCoordinate(json.target), true)
     else console.warn(`Unknown action type ${json.action}`)
   }
 
