@@ -9,11 +9,30 @@ import { RussianCheckers, InternationalCheckers } from "../games/checkers"
 
 
 function convertGametype(number) {
-  switch(number) {
+  switch (number) {
     case 0: return new RandomCheckers()
     case 1: return new RussianCheckers()
     case 2: return new InternationalCheckers()
   }
+}
+
+
+function representCoord(coord, flip, width) {
+  var x = coord % width + 1
+  var y = Math.floor(coord / width) + 1
+  if (!flip) y = width + 1 - y
+  else x = width + 1 - x
+  return String.fromCharCode(96 + x) + y
+}
+
+
+function representMove({ mine, action, from, to, target }, flip, width) {
+  var result = mine ? "You " : "Opponent "
+  if (action === "move") {
+    result += from < 0 ? `revived a piece` : `moved a piece from ${representCoord(from, flip, width)}`
+    result += ` to ${representCoord(to, flip, width)}`
+  } else result += `${action}ed ${representCoord(target, flip, width)}`
+  return result
 }
 
 
@@ -48,6 +67,7 @@ export default class Game extends React.Component {
   logMove(move, mine = false) {
     const moveLog = [...this.state.moveLog]
     moveLog.unshift({ ...move, mine })
+    if (moveLog.length > 20) moveLog.pop()
     this.setState({ moveLog, unreadMoves: mine ? 0 : this.state.unreadMoves + 1 })
   }
 
@@ -227,9 +247,9 @@ export default class Game extends React.Component {
               this.sendMove({ action: "revert" }, true)
             }}
           >
-            {this.state.moveLog.map((move, i) => (
+            {this.state.moveLog.map((move) => (
               <Grid item xs={12}>
-                {`${move.revert ? "reverted " : ""}${move.action} ${move.mine === this.flip ? "black" : "white"}`}
+                {representMove(move, this.flip, this.gametype.width)}
               </Grid>))}
           </Grid>
         </Drawer>
