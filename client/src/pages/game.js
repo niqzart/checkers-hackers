@@ -4,10 +4,16 @@ import { Badge, Button, Drawer, Grid } from "@material-ui/core"
 
 import Board from "../components/board"
 import Grave from "../components/grave"
+import { RandomCheckers } from "../games/test"
+import { RussianCheckers, InternationalCheckers } from "../games/checkers"
 
 
-function representMove({ action, from, to, target }) {
-
+function convertGametype(number) {
+  switch(number) {
+    case 0: return new RandomCheckers()
+    case 1: return new RussianCheckers()
+    case 2: return new InternationalCheckers()
+  }
 }
 
 
@@ -22,7 +28,7 @@ export default class Game extends React.Component {
     }
 
     this.flip = flip
-    this.gametype = gametype
+    this.gametype = convertGametype(gametype)
     if (this.gametype === undefined) return
 
     const positions = Array(this.gametype.width * this.gametype.height).fill().map(this.gametype.positioning)
@@ -127,7 +133,7 @@ export default class Game extends React.Component {
   }
 
   revertLastMove() {
-    const move = {...this.state.moveLog[0]}
+    const move = { ...this.state.moveLog[0] }
 
     const moveLog = [...this.state.moveLog]
     moveLog.shift()
@@ -139,7 +145,6 @@ export default class Game extends React.Component {
   }
 
   reproduceMove(json) {
-    console.log("b")
     if (json.action === "move") {
       json.from = this.convertCoordinate(json.from)
       json.to = this.convertCoordinate(json.to)
@@ -159,7 +164,7 @@ export default class Game extends React.Component {
 
   render() {
     if (this.gametype === undefined) {
-      console.log("Auto redirect from Game")
+      console.warn("Auto redirect from Game")
       return <Redirect to="/" push />
     }
 

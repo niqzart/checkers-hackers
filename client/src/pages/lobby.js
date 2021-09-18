@@ -4,17 +4,6 @@ import VisibilityIcon from "@material-ui/icons/Visibility"
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
 
 import Game from "./game"
-import { RandomCheckers } from "../games/test"
-import { RussianCheckers, InternationalCheckers } from "../games/checkers"
-
-
-function convertGametype(number) {
-  switch(number) {
-    case 0: return new RandomCheckers()
-    case 1: return new RussianCheckers()
-    case 2: return new InternationalCheckers()
-  }
-}
 
 
 export default class LobbyPage extends React.Component {
@@ -44,7 +33,7 @@ export default class LobbyPage extends React.Component {
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
     if (this.state.gameStarted) {
-      return <Game ws={this.ws} flip={this.side === "black"} gametype={convertGametype(lobbySettings.gametype)} />
+      return <Game ws={this.ws} flip={this.side === "black"} gametype={lobbySettings.gametype} />
     }
     else {
       return <Grid container
