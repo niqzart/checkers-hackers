@@ -4,12 +4,14 @@ import { ThemeProvider, createTheme } from "@material-ui/core/styles"
 import { CssBaseline, useMediaQuery } from "@material-ui/core"
 
 import HomePage from "./pages/home"
+import DemoPage from "./pages/demo"
 import LobbyPage from "./pages/lobby"
 
 
 function Main() {
   return <Switch>
     <Route exact path="/" component={HomePage} />
+    <Route exact path="/demo/" component={DemoPage} />
     <Route exact path="/lobby/" component={LobbyPage} />
   </Switch>
 }
