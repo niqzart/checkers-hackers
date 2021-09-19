@@ -19,13 +19,18 @@ export default class LobbyPage extends React.Component {
     this.ws.onmessage = (message) => {
       const json = JSON.parse(message.data)
       if (json.type === "start") this.setState({ gameStarted: true })
+      if (json.type === "join") {
+        const users = { ...this.state.users }
+        users[json.username] = json.side
+        this.setState({ users })
+      }
     }
 
     this.side = location.state.side
-    this.users = location.state.users
     this.gametype = convertGametype(location.state.gametype)
 
     this.state = {
+      users: { ...location.state.users },
       codeShown: false,
       gameStarted: false,
     }
@@ -36,7 +41,7 @@ export default class LobbyPage extends React.Component {
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
     if (this.state.gameStarted) {
-      return <Game ws={this.ws} side={this.side} users={this.users} gametype={this.gametype} />
+      return <Game ws={this.ws} side={this.side} users={this.state.users} gametype={this.gametype} />
     }
     else {
       return <Grid container
@@ -46,7 +51,7 @@ export default class LobbyPage extends React.Component {
         justifyContent="center"
         style={{ minHeight: "100vh" }}
       >
-        <Grid item xs={12} style={{ textAlign: "center" }}>
+        <Grid item xs={12} style={{ textAlign: "center", marginBottom: "0px" }}>
           <h1>Waiting for your opponent...</h1>
           <h2>To invite someone, send them lobby id: {this.props.location.state.gameID}</h2>
           {hasCode ? <h2>Lobby code: {this.state.codeShown ? lobbySettings.code : "•••••"}
@@ -54,21 +59,17 @@ export default class LobbyPage extends React.Component {
               {this.state.codeShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           </h2> : null}
-        </Grid>
-        <Grid item xs={12}>
-          <CircularProgress thickness={3} size={70} />
-        </Grid>
-        <Grid item xs={12} style={{ marginTop: "10px" }}>
-          <h3 style={{ marginBottom: "0px" }}>User list:</h3>
-        </Grid>
-        {Object.entries(this.users).map(([username, side]) =>
-          <Grid item xs={12} id={side}>
-            <h4 style={{ marginTop: "0px" }}>
+          <h2 style={{ fontSize: "22px", margin: "0" }}>Users:</h2> 
+          {Object.entries(this.state.users).map(([username, side]) =>
+            <h4 style={{ marginLeft: "20px", fontSize: "20px", margin: "0" }}>
               <b style={{ color: this.gametype.sideToColor(side) }}>⬤ </b>
               {username}
             </h4>
-          </Grid>
-        )}
+          )}
+        </Grid>
+        <Grid item xs={12} style={{ marginTop: "30px" }}>
+          <CircularProgress thickness={3} size={70} />
+        </Grid>
       </Grid>
     }
   }
