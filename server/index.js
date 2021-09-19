@@ -33,7 +33,7 @@ const websocketRooms = {}
 function joinLobby(lobbyID, username) {
   const lobby = lobbies[lobbyID]
   lobby.users[username] = lobby.nextSide
-  lobby.nextSide = (lobby.nextSide + 1) % lobby.maxPlayers
+  lobby.nextSide = (lobby.nextSide + Math.floor(4 / lobby.maxPlayers)) % 4
 }
 
 
