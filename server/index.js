@@ -44,7 +44,7 @@ app.post("/lobbies/", ({ body }, response) => {
     nextSide: body.side,
     gametype: body.gametype,
     code: body.code,
-    stated: false,
+    started: false,
     users: {},
   }
   
@@ -112,7 +112,7 @@ function sendJSONToLobby(lobbyID, data, actor) {
 function connect(webSocket, lobbyID) {
   websocketRooms[lobbyID].push(webSocket)
 
-  if (!lobbies[lobbyID].started && websocketRooms[lobbyID].length >= 2) {  // replace with max players
+  if (!lobbies[lobbyID].started && websocketRooms[lobbyID].length >= lobbies[lobbyID].maxPlayers) {
     lobbies[lobbyID].started = true
     sendJSONToLobby(lobbyID, { type: "start" })
   } else if (lobbies[lobbyID].started) {
