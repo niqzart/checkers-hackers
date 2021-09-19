@@ -15,18 +15,18 @@ function representCoord(coord, flip, width) {
 }
 
 
-function representMove({ mine, action, from, to, target }, flip, width) {
-  var result = mine ? "You " : "Opponent "
+function representMove({ mine, username, action, from, to, target }, flip, gametype, users) {
+  var result = mine ? "You " : username + " "
   if (action === "move") {
-    result += from < 0 ? `revived a piece` : `moved a piece from ${representCoord(from, flip, width)}`
-    result += ` to ${representCoord(to, flip, width)}`
-  } else result += `${action}ed ${representCoord(target, flip, width)}`
-  return result
+    result += from < 0 ? `revived a piece` : `moved a piece from ${representCoord(from, flip, gametype.width)}`
+    result += ` to ${representCoord(to, flip, gametype.width)}`
+  } else result += `${action}ed ${representCoord(target, flip, gametype.width)}`
+  return <b><b style={{ color: gametype.sideToColor(users[username]) }}>⬤ </b>{result}</b>
 }
 
 
 export default class Game extends React.Component {
-  constructor({ ws, side, gametype }) {
+  constructor({ ws, side, gametype, users, username }) {
     super()
 
     this.ws = ws
@@ -35,6 +35,10 @@ export default class Game extends React.Component {
       if (json.type === "sync") this.reproduceMove(json)
     }
 
+    this.users = users
+    this.username = username
+
+    console.log(side)
     this.flip = side === 2
     this.gametype = gametype
     if (this.gametype === undefined) return
@@ -61,7 +65,8 @@ export default class Game extends React.Component {
   }
 
   sendMove(move, revert = false) {
-    this.ws.send(JSON.stringify({ ...move, type: "sync", revert }))
+    move.username = this.username
+    this.ws.send(JSON.stringify({ ...move, type: "sync" }))
     if (!revert) this.logMove(move, true)
   }
 
@@ -238,7 +243,7 @@ export default class Game extends React.Component {
           >
             {this.state.moveLog.map((move) => (
               <Grid item xs={12}>
-                {representMove(move, this.flip, this.gametype.width)}
+                {representMove(move, this.flip, this.gametype, this.users)}
               </Grid>))}
           </Grid>
         </Drawer>

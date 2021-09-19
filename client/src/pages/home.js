@@ -12,8 +12,8 @@ export default class HomePage extends React.Component {
   constructor() {
     super()
 
-    this.host = "s://checkers-hackers-server.herokuapp.com"
-    // this.host = "://localhost:4000"
+    // this.host = "s://checkers-hackers-server.herokuapp.com"
+    this.host = "://localhost:4000"
 
     this.state = {
       newGame: {

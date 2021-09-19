@@ -11,8 +11,8 @@ export default class LobbyPage extends React.Component {
   constructor({ location }) {
     super()
 
-    const host = "s://checkers-hackers-server.herokuapp.com"
-    // const host = "://localhost:4000"
+    // const host = "s://checkers-hackers-server.herokuapp.com"
+    const host = "://localhost:4000"
 
     this.ws = new WebSocket(`ws${host}/lobbies/${location.state.gameID}/ws/?username=${location.state.username}&code=${location.state.code}`)
     this.ws.onclose = () => console.log("close")
@@ -41,7 +41,7 @@ export default class LobbyPage extends React.Component {
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
     if (this.state.gameStarted) {
-      return <Game ws={this.ws} side={this.side} users={this.state.users} gametype={this.gametype} />
+      return <Game ws={this.ws} side={this.side} users={this.state.users} username={lobbySettings.username} gametype={this.gametype} />
     }
     else {
       return <Grid container
