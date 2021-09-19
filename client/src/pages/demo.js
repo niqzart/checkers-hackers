@@ -1,6 +1,7 @@
-import { useLocation } from "react-router";
+import { useLocation } from "react-router"
 
-import Game from "./game";
+import Game from "./game"
+import { convertGametype } from "../games/index"
 
 export default function DemoPage() {
   const query = new URLSearchParams(useLocation().search)
@@ -14,7 +15,7 @@ export default function DemoPage() {
 
   return <Game
     ws={ws}
-    flip={flip === "true" ? true : false}  // use query string instead
-    gametype={gametype === null ? 1 : parseInt(gametype)}  // use query string instead
+    flip={flip === "true" ? true : false}
+    gametype={convertGametype(gametype === null ? 1 : parseInt(gametype))}
   />
 }
