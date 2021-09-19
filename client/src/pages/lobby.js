@@ -4,6 +4,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility"
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
 
 import Game from "./game"
+import { convertGametype } from "../games/index"
 
 
 export default class LobbyPage extends React.Component {
@@ -21,6 +22,8 @@ export default class LobbyPage extends React.Component {
     }
 
     this.side = location.state.side
+    this.users = location.state.users
+    this.gametype = convertGametype(location.state.gametype)
 
     this.state = {
       codeShown: false,
@@ -33,7 +36,7 @@ export default class LobbyPage extends React.Component {
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
     if (this.state.gameStarted) {
-      return <Game ws={this.ws} side={this.side} gametype={lobbySettings.gametype} />
+      return <Game ws={this.ws} side={this.side} users={this.users} gametype={this.gametype} />
     }
     else {
       return <Grid container
@@ -55,6 +58,17 @@ export default class LobbyPage extends React.Component {
         <Grid item xs={12}>
           <CircularProgress thickness={3} size={70} />
         </Grid>
+        <Grid item xs={12} style={{ marginTop: "10px" }}>
+          <h3 style={{ marginBottom: "0px" }}>User list:</h3>
+        </Grid>
+        {Object.entries(this.users).map(([username, side]) =>
+          <Grid item xs={12} id={side}>
+            <h4 style={{ marginTop: "0px" }}>
+              <b style={{ color: this.gametype.sideToColor(side) }}>⬤ </b>
+              {username}
+            </h4>
+          </Grid>
+        )}
       </Grid>
     }
   }

@@ -61,18 +61,17 @@ export default class HomePage extends React.Component {
       if (gameData.code === null) gameData.code = ""
       fetch(`http${this.host}/lobbies/`, {
         method: "POST",
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameData),
       }).then((response) => {
         return response.json()
       }).then((json) => {
+        const users = {}
+        users[gameData.username] = gameData.side
         this.setState({
           redirect: {
             pathname: "/lobby/",
-            state: {
-              gameID: json["id"],
-              ...gameData
-            }
+            state: { gameID: json["id"], users, ...gameData }
           }
         })
       })
@@ -90,7 +89,7 @@ export default class HomePage extends React.Component {
       if (gameData.code === null) gameData.code = ""
       fetch(`http${this.host}/lobbies/${gameData.gameID}/join/`, {
         method: "POST",
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameData),
       }).then((response) => {
         if (response.status === 404) {
