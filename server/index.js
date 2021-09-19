@@ -30,17 +30,25 @@ const lobbies = {}
 const websocketRooms = {}
 
 
-app.post("/lobbies/", ({ body }, response) => {
-  const users = {}
-  users[body.username] = body.side
+function joinLobby(lobbyID, username) {
+  const lobby = lobbies[lobbyID]
+  lobby.users[username] = lobby.nextSide
+  lobby.nextSide = (lobby.nextSide + 1) % lobby.maxPlayers
+}
 
+
+app.post("/lobbies/", ({ body }, response) => {
   websocketRooms[nextID] = []
   lobbies[nextID] = {
+    maxPlayers: body.gametype < 10 ? 2 : 4,
+    nextSide: body.side,
     gametype: body.gametype,
     code: body.code,
     stated: false,
-    users: users,
+    users: {},
   }
+  
+  joinLobby(nextID, body.username)
   response.json({ "id": nextID++ })
 
   console.log(lobbies)
@@ -78,12 +86,6 @@ app.get("/lobbies/:id/ws/", (request, response) => {
   }
   else response.status(400).json({ message: "Invalid headers" })
 })
-
-
-function joinLobby(lobbyID, username) {
-  lobbies[lobbyID].users[username] =
-    Object.values(lobbies[lobbyID].users).includes("white") ? "black" : "white"
-}
 
 function canJoinLobby(lobbyID, username, code) {
   return lobbyID in websocketRooms

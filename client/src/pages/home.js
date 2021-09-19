@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
       newGame: {
         username: null,
         gametype: 2,
-        side: "white",
+        side: 0,
         code: null,
       },
       joinGame: {
@@ -170,8 +170,8 @@ export default class HomePage extends React.Component {
               value={this.state.newGame.side}
               onChange={(event) => this.handleChange("new", "side", event.target.value)}
             >
-              <MenuItem value={"white"}>White</MenuItem>
-              <MenuItem value={"black"}>Black</MenuItem>
+              <MenuItem value={0}>White</MenuItem>
+              <MenuItem value={2}>Black</MenuItem>
             </Select>
           </FormControl>
         </Box>
