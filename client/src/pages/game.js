@@ -37,7 +37,7 @@ function representMove({ mine, action, from, to, target }, flip, width) {
 
 
 export default class Game extends React.Component {
-  constructor({ ws, flip, gametype }) {
+  constructor({ ws, side, gametype }) {
     super()
 
     this.ws = ws
@@ -46,7 +46,7 @@ export default class Game extends React.Component {
       if (json.type === "sync") this.reproduceMove(json)
     }
 
-    this.flip = flip
+    this.flip = side === 2
     this.gametype = convertGametype(gametype)
     if (this.gametype === undefined) return
 

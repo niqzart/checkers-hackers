@@ -33,7 +33,7 @@ export default class LobbyPage extends React.Component {
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
     if (this.state.gameStarted) {
-      return <Game ws={this.ws} flip={this.side === "black"} gametype={lobbySettings.gametype} />
+      return <Game ws={this.ws} side={this.side} gametype={lobbySettings.gametype} />
     }
     else {
       return <Grid container
