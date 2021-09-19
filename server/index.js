@@ -147,7 +147,7 @@ function connect(webSocket, lobbyID) {
     clearInterval(interval)
     const index = websocketRooms[lobbyID].indexOf(webSocket)
     websocketRooms[lobbyID].splice(index, 1)
-    if (websocketRooms[lobbyID].length === 0) {
+    if (websocketRooms[lobbyID].length === 0 && lobbyID >= 0) {
       delete lobbies[lobbyID]
       delete websocketRooms[lobbyID]
     }

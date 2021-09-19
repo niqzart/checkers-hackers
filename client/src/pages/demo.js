@@ -7,18 +7,18 @@ export default class DemoPage extends React.Component {
   constructor({ location }) {
     super()
 
-    this.state = {
-      redirect: null,
-    }
+    this.state = { redirect: [] }
 
     // this.host = "s://checkers-hackers-server.herokuapp.com"
     this.host = "://localhost:4000"
 
     const query = new URLSearchParams(location.search)
-    var flip = query.get("flip")
-    var gametype = query.get("gametype")
+    this.side = query.get("side")
+    this.gametype = query.get("gametype")
 
-    if (gametype === null) gametype = 1
+    if (this.gametype === null) this.gametype = "1"
+    if (this.side === null) this.side = 0
+    else this.side = parseInt(this.side)
 
     // const ws = {
     //   send: (message) => console.log("Trying to send:\n" + message),
@@ -32,32 +32,39 @@ export default class DemoPage extends React.Component {
     // />
 
     const gameData = {
-      gameID: `-${gametype}`,
+      gameID: `-${this.gametype}`,
       username: "qzart",
       code: "",
     }
 
-    fetch(`http${this.host}/lobbies/${gameData.gameID}/join/`, {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(gameData),
-    }).then((response) => {
-      if (response.status === 404) console.log("Lobby not found")
-      else {
-        response.json().then((json) => {
-          console.log(json)
-          if (json.message === "Success") {
-            this.setState({
-              redirect: { side: json.users[gameData.username], ...gameData, ...json }
-            })
-          } else console.log("Unable to connect")
-        })
-      }
+    Array(this.gametype < 10 ? 2 : 4).fill().map(() => {
+      fetch(`http${this.host}/lobbies/${gameData.gameID}/join/`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameData),
+      }).then((response) => {
+        if (response.status === 404) console.warn("Lobby not found")
+        else {
+          response.json().then((json) => {
+            const side = json.users[gameData.username]
+            if (json.message === "Success") {
+              const redirect = [...this.state.redirect]
+              redirect[side] = { side, ...gameData, ...json }
+              this.setState({ redirect })
+            } else console.warn("Unable to connect")
+          })
+        }
+      })
     })
   }
 
   render() {
-    if (this.state.redirect === null) return <div>Connecting...</div>
-    else return <LobbyPage location={{ state: this.state.redirect }} />
+    const maxPlayers = this.gametype < 10 ? 2 : 4
+    if (Object.keys(this.state.redirect).length < maxPlayers) return <div>Connecting...</div>
+    else return <div>
+      {Array(maxPlayers).fill().map((_, i) => <div style={{ display: (i * (4 / maxPlayers)) === this.side ? "block" : "none" }}>
+        <LobbyPage location={{ state: this.state.redirect[i * (4 / maxPlayers)] }} />
+      </div>)}
+    </div>
   }
 }
