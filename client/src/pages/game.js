@@ -4,17 +4,6 @@ import { Badge, Button, Drawer, Grid } from "@material-ui/core"
 
 import Board from "../components/board"
 import Grave from "../components/grave"
-import { RandomCheckers } from "../games/test"
-import { RussianCheckers, InternationalCheckers } from "../games/checkers"
-
-
-function convertGametype(number) {
-  switch (number) {
-    case 0: return new RandomCheckers()
-    case 1: return new RussianCheckers()
-    case 2: return new InternationalCheckers()
-  }
-}
 
 
 function representCoord(coord, flip, width) {
@@ -47,7 +36,7 @@ export default class Game extends React.Component {
     }
 
     this.flip = side === 2
-    this.gametype = convertGametype(gametype)
+    this.gametype = gametype
     if (this.gametype === undefined) return
 
     const positions = Array(this.gametype.width * this.gametype.height).fill().map(this.gametype.positioning)

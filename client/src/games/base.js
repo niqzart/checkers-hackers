@@ -5,6 +5,10 @@ export class GameType {
     this.pieces = [...pieces]
   }
 
+  sideToColor(side) {
+    return "none"
+  }
+
   positioning(_, squareID) {
     return null
   }
@@ -32,6 +36,10 @@ export class CheckersBase extends GameType {
       { white: true, king: false },
       { white: true, king: true },
     ])
+  }
+
+  sideToColor(side) {
+    return side === 0 ? "white" : "black"
   }
 
   isMoveAllowed(from, to, positions) {
