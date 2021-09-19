@@ -45,6 +45,7 @@ export default class HomePage extends React.Component {
 
     if (gamename === "new") {
       if (fieldName === "username") errors.newGameUsername = null
+      if (fieldName === "gametype") game.side = 0  // a little inconvenient within same player-count gametypes
       this.setState({ newGame: game, errors: errors })
     }
     else {
@@ -141,6 +142,11 @@ export default class HomePage extends React.Component {
       return <Redirect to={this.state.redirect} push />
     }
 
+    const sides = {
+      "two": [[0, "White"], [2, "Black"]],
+      "four": [[0, "Red"], [1, "Blue"], [2, "Green"], [3, "Yellow"]],
+    }
+
     return <table style={{ margin: "auto" }}><tbody><tr>
       <FormWrapper>
         {this.renderTextField("new", "username", "Your Username")}
@@ -157,20 +163,24 @@ export default class HomePage extends React.Component {
               {/* <MenuItem value={0}>Random</MenuItem> */}
               <MenuItem value={1}>Russian</MenuItem>
               <MenuItem value={2}>International</MenuItem>
+              <MenuItem value={11}>FourWay Russian</MenuItem>
+              <MenuItem value={12}>FourWay International</MenuItem>
             </Select>
           </FormControl>
         </Box>
         <Box marginTop="4px" marginBottom="4px">
           <FormControl style={{ width: "100%" }}>
             <InputLabel id="new-game-side-label">Your Side</InputLabel>
+
             <Select
               id="new-game-side"
               variant="outlined"
               value={this.state.newGame.side}
               onChange={(event) => this.handleChange("new", "side", event.target.value)}
             >
-              <MenuItem value={0}>White</MenuItem>
-              <MenuItem value={2}>Black</MenuItem>
+              {sides[this.state.newGame.gametype < 10 ? "two" : "four"].map(([value, name]) => 
+                <MenuItem value={value} id={value}>{name}</MenuItem>
+              )}
             </Select>
           </FormControl>
         </Box>
