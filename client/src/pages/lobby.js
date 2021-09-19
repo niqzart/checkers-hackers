@@ -18,6 +18,7 @@ export default class LobbyPage extends React.Component {
     this.ws.onclose = () => console.log("close")
     this.ws.onmessage = (message) => {
       const json = JSON.parse(message.data)
+      console.log(json)
       if (json.type === "start") this.setState({ gameStarted: true })
       if (json.type === "join") {
         const users = { ...this.state.users }

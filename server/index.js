@@ -29,6 +29,19 @@ var nextID = 0
 const lobbies = {}
 const websocketRooms = {}
 
+// create test lobbies
+for (let i of [1, 2, 11, 12]) {
+  lobbies[`-${i}`] = {
+    maxPlayers: i < 10 ? 2 : 4,
+    nextSide: 0,
+    gametype: i,
+    code: "",
+    started: true,
+    users: {},
+  }
+  websocketRooms[`-${i}`] = []
+}
+
 
 function joinLobby(lobbyID, username) {
   const lobby = lobbies[lobbyID]
