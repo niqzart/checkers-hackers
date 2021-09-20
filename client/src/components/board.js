@@ -15,8 +15,8 @@ function Row({ number, game, width, height, side, positions }) {
     <th>{rowID}</th>
     {Array(width).fill().map(
       (_, x) => {
-        if (side === 1) x, y = y, height - x
-        if (side === 3) x, y = w - y, x
+        if (side === 1) [x, y] = [y, height - x]
+        if (side === 3) [x, y] = [width - y, x]
 
         var squareID = y * width + x
         if (side === 2) squareID = height * width - squareID - 1
@@ -32,7 +32,7 @@ function Row({ number, game, width, height, side, positions }) {
         />
       }
     )}
-    <th>{displayNumber}</th>
+    <th>{rowID}</th>
   </tr>
 }
 

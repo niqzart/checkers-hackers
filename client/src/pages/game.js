@@ -84,7 +84,7 @@ export default class Game extends React.Component {
     fallen[index] += 1
     positions[squareID] = null
 
-    const winner = this.gametype.getWinner
+    const winner = this.gametype.getWinner(fallen)
     if (winner != null) this.setResult({ winner })
 
     this.setState({ positions, fallen })
