@@ -39,8 +39,9 @@ function Row({ number, game, width, height, side, positions }) {
 export default class Board extends React.Component {
   constructor({ side, gametype }) {
     super()
-    const letters = Array(gametype.width + 2).fill().map((_, i) =>
-      i % (gametype.width + 1) === 0 ? null : String.fromCharCode(96 + i))
+    const letters = Array(gametype.width + 2).fill().map(
+      (_, i) => i % (gametype.width + 1) === 0 ? null
+        : (side % 2 === 0 ? String.fromCharCode(96 + i) : i))
     if (side === 2) { letters.reverse() }
     this.letterRow = letters.map((letter, i) => <th key={i}>{letter}</th>)
   }
