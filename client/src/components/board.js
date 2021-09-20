@@ -4,15 +4,22 @@ import React from "react"
 
 import Square from "./square"
 
-function Row({ number, game, width, flip, height, positions }) {
-  const y = number
-  const displayNumber = flip ? y + 1 : height - y
+
+function Row({ number, game, width, height, side, positions }) {
+  var y = number
+
+  var rowID = side < 2 ? y + 1 : height - y
+  if (rowID % 2 === 1) String.fromCharCode(96 + rowID)
 
   return <tr key={y}>
-    <th>{displayNumber}</th>
+    <th>{rowID}</th>
     {Array(width).fill().map(
       (_, x) => {
-        const squareID = y * height + x
+        if (side === 1) x, y = y, height - x
+        if (side === 3) x, y = w - y, x
+
+        var squareID = y * width + x
+        if (side === 2) squareID = height * width - squareID - 1
 
         return <Square
           key={squareID}
@@ -30,16 +37,16 @@ function Row({ number, game, width, flip, height, positions }) {
 }
 
 export default class Board extends React.Component {
-  constructor({ flip, gametype }) {
+  constructor({ side, gametype }) {
     super()
     const letters = Array(gametype.width + 2).fill().map((_, i) =>
       i % (gametype.width + 1) === 0 ? null : String.fromCharCode(96 + i))
-    if (flip) { letters.reverse() }
+    if (side === 2) { letters.reverse() }
     this.letterRow = letters.map((letter, i) => <th key={i}>{letter}</th>)
   }
 
   render() {
-    const { game, gametype, flip, positions } = this.props
+    const { game, gametype, side, positions } = this.props
 
     const { width, height } = gametype
 
@@ -54,9 +61,9 @@ export default class Board extends React.Component {
             number={i}
             width={width}
             height={height}
-            flip={flip}
-            positions={positions}
+            side={side}
             game={game}
+            positions={positions}
           />)}
       </tbody>
       <tfoot>

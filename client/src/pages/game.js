@@ -6,23 +6,21 @@ import Board from "../components/board"
 import Grave from "../components/grave"
 
 
-function representCoord(coord, flip, width) {
+function representCoord(coord, width) {
   var x = coord % width + 1
   var y = Math.floor(coord / width) + 1
-  if (!flip) y = width + 1 - y
-  else x = width + 1 - x
   return String.fromCharCode(96 + x) + y
 }
 
 
-function representMove({ mine, username, action, from, to, target }, flip, gametype, users) {
+function representMove({ mine, username, action, from, to, target }, { width, sideToColor }, users) {
   var result = mine ? "You " : username + " "
   if (action === "move") {
     result += from < 0 ? `revived a piece`
-      : `moved a piece from ${representCoord(from, flip, gametype.width)}`
-    result += ` to ${representCoord(to, flip, gametype.width)}`
-  } else result += `${action}ed ${representCoord(target, flip, gametype.width)}`
-  return <b><b style={{ color: gametype.sideToColor(users[username]) }}>⬤ </b>{result}</b>
+      : `moved a piece from ${representCoord(from, width)}`
+    result += ` to ${representCoord(to, width)}`
+  } else result += `${action}ed ${representCoord(target, width)}`
+  return <b><b style={{ color: sideToColor(users[username]) }}>⬤ </b>{result}</b>
 }
 
 
@@ -40,12 +38,11 @@ export default class Game extends React.Component {
     this.username = username
     this.setResult = setResult
 
-    this.flip = side === 2
+    this.side = side
     this.gametype = gametype
     if (this.gametype === undefined) return
 
     const positions = Array(this.gametype.width * this.gametype.height).fill().map(this.gametype.positioning)
-    if (this.flip) positions.reverse()
 
     this.state = {
       positions: positions,
@@ -146,10 +143,6 @@ export default class Game extends React.Component {
     })
   }
 
-  convertCoordinate(coord) { // make an absolute coord system instead
-    return coord < 0 ? coord : this.gametype.width * this.gametype.height - coord - 1
-  }
-
   revertLastMove() {
     const move = { ...this.state.moveLog[0] }
 
@@ -163,17 +156,10 @@ export default class Game extends React.Component {
   }
 
   reproduceMove(json) {
-    if (json.action === "move") {
-      json.from = this.convertCoordinate(json.from)
-      json.to = this.convertCoordinate(json.to)
-      this.movePiece(json.from, json.to, true)
-    } else if (json.action === "kill") {
-      json.target = this.convertCoordinate(json.target)
-      this.kill(json.target, true)
-    } else if (json.action === "crown") {
-      json.target = this.convertCoordinate(json.target)
-      this.crown(json.target, true)
-    } else if (json.action === "revert") {
+    if (json.action === "move") this.movePiece(json.from, json.to, true)
+    else if (json.action === "kill") this.kill(json.target, true)
+    else if (json.action === "crown") this.crown(json.target, true)
+    else if (json.action === "revert") {
       this.revertLastMove()
       return
     } else console.warn(`Unknown action type ${json.action}`)
@@ -197,7 +183,7 @@ export default class Game extends React.Component {
           <Grid item xs={12}>
             <Board
               game={this}
-              flip={this.flip}
+              side={this.side}
               gametype={this.gametype}
               positions={this.state.positions}
               currentOver={this.state.currentOver}
@@ -251,7 +237,7 @@ export default class Game extends React.Component {
           >
             {this.state.moveLog.map((move) => (
               <Grid item xs={12}>
-                {representMove(move, this.flip, this.gametype, this.users)}
+                {representMove(move, this.gametype, this.users)}
               </Grid>))}
           </Grid>
         </Drawer>
