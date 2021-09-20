@@ -26,7 +26,7 @@ function representMove({ mine, username, action, from, to, target }, flip, gamet
 
 
 export default class Game extends React.Component {
-  constructor({ ws, side, gametype, users, username }) {
+  constructor({ ws, side, gametype, users, username, setResult }) {
     super()
 
     this.ws = ws
@@ -37,8 +37,8 @@ export default class Game extends React.Component {
 
     this.users = users
     this.username = username
+    this.setResult = setResult
 
-    console.log(side)
     this.flip = side === 2
     this.gametype = gametype
     if (this.gametype === undefined) return
@@ -85,6 +85,9 @@ export default class Game extends React.Component {
       x.white === positions[squareID].white && x.king === positions[squareID].king)
     fallen[index] += 1
     positions[squareID] = null
+
+    const winner = this.gametype.getWinner
+    if (winner != null) this.setResult({ winner })
 
     this.setState({ positions, fallen })
 
