@@ -9,7 +9,10 @@ export default function Square({ id, even, over, dragged, game, checker }) {
     onDragEnd={() => game.handleEndDrag(id)}
     onDoubleClick={() => game.handleDoubleClick(id)}
     // style={{ backgroundColor: over ? (game.canMovePieceTo(id) ? "blue" : "red") : (even ? "#FFCE9E" : "#D18B47") }}>
-    style={{ backgroundColor: over && game.canMovePieceTo(id) ? "blue" : (even ? "#FFCE9E" : "#D18B47") }}>
+    style={{
+      backgroundColor: over && game.canMovePieceTo(id) ? "blue"
+        : (even ? "#FFCE9E" : "#D18B47")
+    }}>
     <div style={{ opacity: dragged ? 0 : 1 }}>
       {checker === null ? null : <Checker white={checker.white} king={checker.king} />}
     </div>

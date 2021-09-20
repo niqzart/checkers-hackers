@@ -1,18 +1,3 @@
-// Lobbies HTTP:
-// POST /lobbies/ -> create a lobby, init a websocket room, return ID & room-code           DONE
-// POST /lobbies/id/join/ -> check if exists, check code & return room-code                 DONE
-// **** /lobbies/id/ws/ -> check the code & connect to websocket room                       DONE
-
-// WebSocket:
-// server: onConnect() -> add user to the lobby & check if game can be / has been started   DONE
-// client: onMessage("start") -> game has been started                                      
-// server: onMessage("turn") -> send to all other clients                                   DONE
-
-// For client:
-// Keep the websocket from LobbyPage to GamePage (location.state)
-
-// RPC vs REST
-
 import express from "express"
 import cors from "cors"
 import { WebSocketServer } from "ws"
@@ -60,7 +45,7 @@ app.post("/lobbies/", ({ body }, response) => {
     started: false,
     users: {},
   }
-  
+
   joinLobby(nextID, body.username)
   response.json({ "id": nextID++ })
 
@@ -92,7 +77,8 @@ app.get("/lobbies/:id/ws/", (request, response) => {
         username: username,
         side: lobbies[lobbyID].users[username]
       })
-      wss.handleUpgrade(request, request.socket, Buffer.alloc(0), (ws) => connect(ws, request.params.id))
+      wss.handleUpgrade(request, request.socket, Buffer.alloc(0),
+        (ws) => connect(ws, request.params.id))
     } else {
       wss.handleUpgrade(request, request.socket, Buffer.alloc(0), reject)
     }
@@ -125,7 +111,8 @@ function sendJSONToLobby(lobbyID, data, actor) {
 function connect(webSocket, lobbyID) {
   websocketRooms[lobbyID].push(webSocket)
 
-  if (!lobbies[lobbyID].started && websocketRooms[lobbyID].length >= lobbies[lobbyID].maxPlayers) {
+  if (!lobbies[lobbyID].started
+    && websocketRooms[lobbyID].length >= lobbies[lobbyID].maxPlayers) {
     lobbies[lobbyID].started = true
     sendJSONToLobby(lobbyID, { type: "start" })
   } else if (lobbies[lobbyID].started) {
@@ -137,8 +124,8 @@ function connect(webSocket, lobbyID) {
       if (client != webSocket) client.send(message.toString())
     }
   })
-  
-  let interval = setInterval(() => { 
+
+  let interval = setInterval(() => {
     webSocket.ping()
     // console.log("ping") 
   }, 50e3)

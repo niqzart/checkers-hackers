@@ -20,7 +20,11 @@ function Main() {
 export default function App() {
   return (
     <ThemeProvider
-      theme={createTheme({ palette: { type: useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light", } })}
+      theme={createTheme({
+        palette: {
+          type: useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light",
+        }
+      })}
     >
       <CssBaseline />
       <Main />

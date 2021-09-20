@@ -18,7 +18,8 @@ function representCoord(coord, flip, width) {
 function representMove({ mine, username, action, from, to, target }, flip, gametype, users) {
   var result = mine ? "You " : username + " "
   if (action === "move") {
-    result += from < 0 ? `revived a piece` : `moved a piece from ${representCoord(from, flip, gametype.width)}`
+    result += from < 0 ? `revived a piece`
+      : `moved a piece from ${representCoord(from, flip, gametype.width)}`
     result += ` to ${representCoord(to, flip, gametype.width)}`
   } else result += `${action}ed ${representCoord(target, flip, gametype.width)}`
   return <b><b style={{ color: gametype.sideToColor(users[username]) }}>⬤ </b>{result}</b>
@@ -231,7 +232,11 @@ export default class Game extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Drawer anchor={"bottom"} open={this.state.logOpen} onClose={() => this.setState({ logOpen: false })} >
+        <Drawer
+          anchor={"bottom"}
+          open={this.state.logOpen}
+          onClose={() => this.setState({ logOpen: false })}
+        >
           <Grid container
             spacing={0}
             direction="column"

@@ -70,7 +70,10 @@ export default class LobbyPage extends React.Component {
           <h1>Waiting for your opponent...</h1>
           <h2>To invite someone, send them lobby id: {this.props.location.state.gameID}</h2>
           {hasCode ? <h2>Lobby code: {this.state.codeShown ? lobbySettings.code : "•••••"}
-            <IconButton size="small" onClick={() => this.setState({ codeShown: !this.state.codeShown })}>
+            <IconButton
+              size="small"
+              onClick={() => this.setState({ codeShown: !this.state.codeShown })}
+            >
               {this.state.codeShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           </h2> : null}

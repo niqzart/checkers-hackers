@@ -57,7 +57,9 @@ export default class HomePage extends React.Component {
 
   validateNewGame() {
     const gameData = this.state.newGame
-    if (gameData.username === null) this.setState({ errors: { ...this.state.errors, newGameUsername: true } })
+    if (gameData.username === null) this.setState({
+      errors: { ...this.state.errors, newGameUsername: true }
+    })
     else {
       if (gameData.code === null) gameData.code = ""
       fetch(`http${this.host}/lobbies/`, {
@@ -117,7 +119,8 @@ export default class HomePage extends React.Component {
   }
 
   renderTextField(gamename, field, label) {
-    var error = this.state.errors[gamename + "Game" + field.charAt(0).toUpperCase() + field.slice(1)]
+    var error = this.state.errors[
+      gamename + "Game" + field.charAt(0).toUpperCase() + field.slice(1)]
     if (error === true) error = "This shouldn't be empty"
     return <Box marginTop="4px" marginBottom="4px"><TextField
       id={gamename + "-game-" + field}
@@ -178,7 +181,7 @@ export default class HomePage extends React.Component {
               value={this.state.newGame.side}
               onChange={(event) => this.handleChange("new", "side", event.target.value)}
             >
-              {sides[this.state.newGame.gametype < 10 ? "two" : "four"].map(([value, name]) => 
+              {sides[this.state.newGame.gametype < 10 ? "two" : "four"].map(([value, name]) =>
                 <MenuItem value={value} id={value}>{name}</MenuItem>
               )}
             </Select>
