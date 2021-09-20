@@ -4,6 +4,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility"
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
 
 import Game from "./game"
+import GameOver from "./gameover"
 import { convertGametype } from "../games/index"
 
 
@@ -18,7 +19,6 @@ export default class LobbyPage extends React.Component {
     this.ws.onclose = () => console.log("close")
     this.ws.onmessage = (message) => {
       const json = JSON.parse(message.data)
-      console.log(json)
       if (json.type === "start") this.setState({ gameStarted: true })
       if (json.type === "join") {
         const users = { ...this.state.users }
@@ -34,6 +34,7 @@ export default class LobbyPage extends React.Component {
       users: { ...location.state.users },
       codeShown: false,
       gameStarted: false,
+      gameResult: null,
     }
   }
 
@@ -41,10 +42,23 @@ export default class LobbyPage extends React.Component {
     const lobbySettings = this.props.location.state
     const hasCode = lobbySettings.code !== null && lobbySettings.code !== ""
 
-    if (this.state.gameStarted) {
-      return <Game ws={this.ws} side={this.side} users={this.state.users} username={lobbySettings.username} gametype={this.gametype} />
-    }
-    else {
+    if (this.state.gameResult !== null) {
+      return <GameOver
+        users={this.state.users}
+        username={lobbySettings.username}
+        result={this.state.gameResult}
+        gametype={this.gametype}
+      />
+    } else if (this.state.gameStarted) {
+      return <Game
+        ws={this.ws}
+        side={this.side}
+        users={this.state.users}
+        username={lobbySettings.username}
+        setResult={(gameResult) => this.setState({ gameResult })}
+        gametype={this.gametype}
+      />
+    } else {
       return <Grid container
         spacing={0}
         direction="column"
@@ -60,7 +74,7 @@ export default class LobbyPage extends React.Component {
               {this.state.codeShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           </h2> : null}
-          <h2 style={{ fontSize: "22px", margin: "0" }}>Users:</h2> 
+          <h2 style={{ fontSize: "22px", margin: "0" }}>Users:</h2>
           {Object.entries(this.state.users).map(([username, side]) =>
             <h4 style={{ marginLeft: "20px", fontSize: "20px", margin: "0" }}>
               <b style={{ color: this.gametype.sideToColor(side) }}>⬤ </b>
