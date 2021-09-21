@@ -31,7 +31,7 @@ export default class Grave extends React.Component {
           onDragStart={() => game.handleStartDrag(-index - 1)}
           onDragEnd={() => game.handleEndDrag()}
         >
-          <Checker white={piece.white} king={piece.king} />
+          <Checker color={piece.color} king={piece.king} />
           {fallen[index]}
         </Grid>
       )}

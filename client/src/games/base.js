@@ -35,10 +35,10 @@ export class GameType {
 export class CheckersBase extends GameType {
   constructor(width, height) {
     super(width, height, [
-      { white: false, king: false },
-      { white: false, king: true },
-      { white: true, king: false },
-      { white: true, king: true },
+      { color: "white", king: false },
+      { color: "white", king: true },
+      { color: "black", king: false },
+      { color: "black", king: true },
     ])
     this.totalPieces = Math.floor(width / 2) * Math.floor((height - 2) / 2)
   }
