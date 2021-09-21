@@ -24,6 +24,7 @@ export default class Checker extends React.Component {
 
     return <div>
       <img
+        // style={{ filter: colors[0] === "white" ? "invert(1)" : "" }} -> cool thing, but doesn't affect the preview
         src={king ? (colors[0] === "white" ? whiteKing : blackKing) : (colors[0] === "white" ? whiteChecker : blackChecker)}
         alt={`A ${colors[0] === "white" ? "White" : "Black"} ${king ? "King" : "Checker"}`}
         // draggable={this.state.draggable}
