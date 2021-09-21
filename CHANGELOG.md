@@ -20,9 +20,16 @@
 
 ## V1 (future)
 ### 1.2.1
-- New icons for pieces (with css-art).
 - Absolute coordinate system for future updates.
-- Adaptive game board.
+- Row / column labels work with absolute coords.
+- Demo page supports viewing from any side.
+- All piece-related colors are now kept in piece objects.
+- New icons for pieces with dynamic recoloring.
 
-### 1.2.6
-TBA
+### 1.2.5
+- Adaptive game board.
+- Blacked out squares where you can't go to.
+- Blacked out squares are defined in gametype.
+- Four-way-specific settings for lobbies.
+- Player-by-player losing & spectating.
+- Gametypes for four-way checkers.
