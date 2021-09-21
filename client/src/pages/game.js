@@ -42,7 +42,8 @@ export default class Game extends React.Component {
     this.gametype = gametype
     if (this.gametype === undefined) return
 
-    const positions = Array(this.gametype.width * this.gametype.height).fill().map(this.gametype.positioning)
+    const positions = Array(this.gametype.width * this.gametype.height).fill().map((_, squareID) => 
+    this.gametype.positioning(squareID))
 
     this.state = {
       positions: positions,
@@ -80,7 +81,7 @@ export default class Game extends React.Component {
 
     // redo index getting with an abstraction!
     const index = this.gametype.pieces.findIndex(x =>
-      x.white === positions[squareID].white && x.king === positions[squareID].king)
+      x.colors === positions[squareID].colors && x.king === positions[squareID].king)
     fallen[index] += 1
     positions[squareID] = null
 

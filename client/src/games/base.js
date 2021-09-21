@@ -9,7 +9,7 @@ export class GameType {
     return "none"
   }
 
-  positioning(_, squareID) {
+  positioning(squareID) {
     return null
   }
 
@@ -35,10 +35,10 @@ export class GameType {
 export class CheckersBase extends GameType {
   constructor(width, height) {
     super(width, height, [
-      { color: "white", king: false },
-      { color: "white", king: true },
-      { color: "black", king: false },
-      { color: "black", king: true },
+      { colors: ["white", "#bbb", "#000"], king: false },
+      { colors: ["white", "#bbb", "#000"], king: true },
+      { colors: ["black", "#444", "#fff"], king: false },
+      { colors: ["black", "#444", "#fff"], king: true },
     ])
     this.totalPieces = Math.floor(width / 2) * Math.floor((height - 2) / 2)
   }

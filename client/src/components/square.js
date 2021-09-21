@@ -13,8 +13,8 @@ export default function Square({ id, even, over, dragged, game, checker }) {
       backgroundColor: over && game.canMovePieceTo(id) ? "blue"
         : (even ? "#FFCE9E" : "#D18B47")
     }}>
-    <div style={{ opacity: dragged ? 0 : 1 }}>
-      {checker === null ? id : <Checker color={checker.color} king={checker.king} />}
+    <div style={{ opacity: dragged ? 0 : 1 }}>  {/* remove if try with ReactSVG */}
+      {checker === null ? id : <Checker colors={checker.colors} king={checker.king} />}
     </div>
   </td>
 }
