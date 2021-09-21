@@ -1,0 +1,9 @@
+<svg 
+    width="52px" 
+    height="52px" 
+    viewBox="-26 -26 52 52" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+        <circle id="border" cx="0" cy="0" r="26" stroke="none" />
+        <circle id="main" cx="0" cy="0" r="22" stroke="none" />
+</svg>

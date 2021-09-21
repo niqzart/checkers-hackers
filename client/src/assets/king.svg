@@ -1,0 +1,10 @@
+<svg 
+    width="52px" 
+    height="52px" 
+    viewBox="-26 -26 52 52" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+        <circle id="border" cx="0" cy="0" r="26" stroke="none" />
+        <circle id="main" cx="0" cy="0" r="22" stroke="none" />
+        <path id="crown" d="M 0 -11 L -5 0 L -11 -11 L -11 9 L 11 9 L 11 -11 L 5 0 L 0 -11" fill="none" stroke-width="2" />
+</svg>
