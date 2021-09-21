@@ -1,3 +1,7 @@
+body {
+  user-select: none;
+}
+
 .no-border {
   border-collapse: collapse;
 }
@@ -6,6 +10,7 @@
   width: 72px;
   height: 72px;
   text-align: center;
+  user-select: none;
 }
 
 .light {
@@ -14,4 +19,8 @@
 
 .dark {
   background-color: #D18B47;
+}
+
+.piece {
+  cursor: move;
 }
