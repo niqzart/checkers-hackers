@@ -8,8 +8,8 @@ import Square from "./square"
 function Row({ number, game, width, height, side, positions }) {
   var y = number
 
-  var rowID = side < 2 ? y + 1 : height - y
-  if (rowID % 2 === 1) String.fromCharCode(96 + rowID)
+  var rowID = side === 0 || side == 3 ? height - y : y + 1
+  if (side % 2 === 1) rowID = String.fromCharCode(96 + rowID)
 
   return <tr key={y}>
     <th>{rowID}</th>
@@ -42,7 +42,7 @@ export default class Board extends React.Component {
     const letters = Array(gametype.width + 2).fill().map(
       (_, i) => i % (gametype.width + 1) === 0 ? null
         : (side % 2 === 0 ? String.fromCharCode(96 + i) : i))
-    if (side === 2) { letters.reverse() }
+    if (side === 2 || side === 3) letters.reverse()
     this.letterRow = letters.map((letter, i) => <th key={i}>{letter}</th>)
   }
 
